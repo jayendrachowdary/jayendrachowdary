@@ -1,0 +1,106 @@
+openapi: 3.0.1
+info:
+  title: CosmosDB Query API
+  description: API to query items from a CosmosDB collection
+  version: 1.0.0
+servers:
+  - url: https://{accountName}.documents.azure.com
+    variables:
+      accountName:
+        default: your-account-name
+paths:
+  /dbs/{databaseId}/colls/{collectionId}/docs/query:
+    post:
+      summary: Query items in a CosmosDB collection
+      operationId: queryCollectionItems
+      parameters:
+        - name: databaseId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the database
+        - name: collectionId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the collection
+        - name: maxItemCount
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 100
+          description: Maximum number of items to retrieve
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  description: SQL query to execute against the collection
+                  example: "SELECT * FROM c WHERE c.category = @category"
+                parameters:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      value:
+                        type: string
+              required:
+                - query
+      responses:
+        '200':
+          description: A list of items matching the query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Collection not found
+        '500':
+          description: Internal server error
+      security:
+        - cosmosdbAuth: []
+
+components:
+  securitySchemes:
+    cosmosdbAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+  schemas:
+    Query:
+      type: object
+      properties:
+        query:
+          type: string
+          example: "SELECT * FROM c WHERE c.category = @category"
+        parameters:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              value:
+                type: string
+    Item:
+      type: object
+      properties:
+        id:
+          type: string
+        otherProperty:
+          type: string
