@@ -104,3 +104,15 @@ components:
           type: string
         otherProperty:
           type: string
+
+
+
+{
+  "query": "SELECT * FROM c WHERE c.category = @category",
+  "parameters": [
+    {
+      "name": "@category",
+      "value": "electronics"
+    }
+  ]
+}
