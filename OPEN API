@@ -116,3 +116,49 @@ components:
     }
   ]
 }
+
+
+
+openapi: 3.0.0
+info:
+  title: Cosmos DB API
+  description: API to interact with Azure Cosmos DB
+  version: 1.0.0
+paths:
+  /dbs/{database}/colls/{collection}/docs:
+    get:
+      summary: Retrieve items from a collection
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The database ID
+        - name: collection
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The collection ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      security:
+        - cosmosDbAuth: []
+components:
+  securitySchemes:
+    cosmosDbAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
