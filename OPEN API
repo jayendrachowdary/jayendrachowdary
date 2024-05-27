@@ -162,3 +162,6 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
+
+I developed a Cosmos DB API to retrieve data and tested it in Postman. Despite trying multiple methods, I am still facing issues with the authorization key. I have checked and tried using both the subscription key and management API keys, but the problem persists. Could someone please help me if they have any insights?
