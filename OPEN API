@@ -169,3 +169,5 @@ I developed a Cosmos DB API to retrieve data and tested it in Postman. Despite t
 
 var today = new Date();
 var UTCstring = today.toUTCString();
+
+requestMessage.Headers.Add("x-ms-documentdb-partitionkey", " [ \"" + partitionKey + "\" ] ");
