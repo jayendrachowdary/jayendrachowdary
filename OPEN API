@@ -1,177 +1,228 @@
-openapi: 3.0.1
-info:
-  title: CosmosDB Query API
-  description: API to query items from a CosmosDB collection
-  version: 1.0.0
-servers:
-  - url: https://{accountName}.documents.azure.com
-    variables:
-      accountName:
-        default: your-account-name
-paths:
-  /dbs/{databaseId}/colls/{collectionId}/docs/query:
-    post:
-      summary: Query items in a CosmosDB collection
-      operationId: queryCollectionItems
-      parameters:
-        - name: databaseId
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The ID of the database
-        - name: collectionId
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The ID of the collection
-        - name: maxItemCount
-          in: query
-          required: false
-          schema:
-            type: integer
-            default: 100
-          description: Maximum number of items to retrieve
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                query:
-                  type: string
-                  description: SQL query to execute against the collection
-                  example: "SELECT * FROM c WHERE c.category = @category"
-                parameters:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                      value:
-                        type: string
-              required:
-                - query
-      responses:
-        '200':
-          description: A list of items matching the query
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '404':
-          description: Collection not found
-        '500':
-          description: Internal server error
-      security:
-        - cosmosdbAuth: []
-
-components:
-  securitySchemes:
-    cosmosdbAuth:
-      type: apiKey
-      name: Authorization
-      in: header
-  schemas:
-    Query:
-      type: object
-      properties:
-        query:
-          type: string
-          example: "SELECT * FROM c WHERE c.category = @category"
-        parameters:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              value:
-                type: string
-    Item:
-      type: object
-      properties:
-        id:
-          type: string
-        otherProperty:
-          type: string
-
-
-
 {
-  "query": "SELECT * FROM c WHERE c.category = @category",
-  "parameters": [
-    {
-      "name": "@category",
-      "value": "electronics"
-    }
-  ]
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Cosmosdb API",
+        "description": "API to query items from a CosmosDB collection",
+        "version": "1.0"
+    },
+    "servers": [{
+        "url": "https://apimdocumentmanagement.azure-api.net/api"
+    }],
+    "paths": {
+        "/document/{id}": {
+            "get": {
+                "summary": "GetItem id",
+                "description": "GetFlour Item by id",
+                "operationId": "GetFlourByID",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": ""
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "null"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "DeleteItem Id",
+                "description": "Delete Flour from POC db by pkey and id",
+                "operationId": "DeleteFlourByIdandPkey",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": ""
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "null"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "UpdateItembasedoncategory",
+                "description": "UpdateItembasedoncategory",
+                "operationId": "updateitembasedoncategory",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": ""
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "null"
+                    }
+                }
+            },
+            "put": {
+                "summary": "UpdateItem",
+                "description": "UpdateItem",
+                "operationId": "updateitem",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": ""
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "null"
+                    }
+                }
+            }
+        },
+        "/documet/pkey/{category}": {
+            "get": {
+                "summary": "Get items by pkey category",
+                "description": "GetFlour items by pkey category",
+                "operationId": "getresource",
+                "parameters": [{
+                    "name": "category",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": ""
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "null"
+                    }
+                }
+            }
+        },
+        "/document/{category}": {
+            "post": {
+                "summary": "addcountryItem",
+                "description": "CreateFlour Item Document",
+                "operationId": "createadocument",
+                "parameters": [{
+                    "name": "category",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": ""
+                    }
+                }],
+                "requestBody": {
+                    "description": "Sa",
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "Category": "Fruit",
+                                "id": "4",
+                                "foo": "bar"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "null"
+                    }
+                }
+            }
+        },
+        "/document": {
+            "get": {
+                "summary": "getcountriesResource",
+                "description": "getcountriesResource",
+                "operationId": "getcountriesresource",
+                "responses": {
+                    "200": {
+                        "description": "null"
+                    }
+                }
+            },
+            "post": {
+                "summary": "addItem",
+                "description": "CreateFlour Item Document",
+                "operationId": "6659b4ae1700dc0b8818bf91",
+                "requestBody": {
+                    "description": "Sa",
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "Category": "Fruit",
+                                "id": "4",
+                                "foo": "bar"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "null"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Query": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "example": "SELECT * FROM c WHERE c.category = @category"
+                    },
+                    "parameters": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "value": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "Item": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "otherProperty": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "apiKeyHeader": {
+                "type": "apiKey",
+                "name": "Ocp-Apim-Subscription-Key",
+                "in": "header"
+            },
+            "apiKeyQuery": {
+                "type": "apiKey",
+                "name": "subscription-key",
+                "in": "query"
+            }
+        }
+    },
+    "security": [{
+        "apiKeyHeader": []
+    }, {
+        "apiKeyQuery": []
+    }]
 }
-
-
-
-openapi: 3.0.0
-info:
-  title: Cosmos DB API
-  description: API to interact with Azure Cosmos DB
-  version: 1.0.0
-paths:
-  /dbs/{database}/colls/{collection}/docs:
-    get:
-      summary: Retrieve items from a collection
-      parameters:
-        - name: database
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The database ID
-        - name: collection
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The collection ID
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-        '401':
-          description: Unauthorized
-        '404':
-          description: Not Found
-      security:
-        - cosmosDbAuth: []
-components:
-  securitySchemes:
-    cosmosDbAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-
-
-I developed a Cosmos DB API to retrieve data and tested it in Postman. Despite trying multiple methods, I am still facing issues with the authorization key. I have checked and tried using both the subscription key and management API keys, but the problem persists. Could someone please help me if they have any insights?
-
-
-var today = new Date();
-var UTCstring = today.toUTCString();
-
-requestMessage.Headers.Add("x-ms-documentdb-partitionkey", " [ \"" + partitionKey + "\" ] ");
-
-<set-header name="x-ms-documentdb-partitionkey" exists-action="override">
-        <value>[ "@(context.Request.Headers.GetValueOrDefault("partitionKey", "defaultPartitionKey"))" ]</value>
-    </set-header>
