@@ -171,3 +171,7 @@ var today = new Date();
 var UTCstring = today.toUTCString();
 
 requestMessage.Headers.Add("x-ms-documentdb-partitionkey", " [ \"" + partitionKey + "\" ] ");
+
+<set-header name="x-ms-documentdb-partitionkey" exists-action="override">
+        <value>[ "@(context.Request.Headers.GetValueOrDefault("partitionKey", "defaultPartitionKey"))" ]</value>
+    </set-header>
