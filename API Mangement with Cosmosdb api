@@ -1,0 +1,335 @@
+Inbond Policy Rule
+====================
+Add Item: (Post)
+=============
+<!--
+    - Policies are applied in the order they appear.
+    - Position <base/> inside a section to inherit policies from the outer scope.
+    - Comments within policies are not preserved.
+-->
+<!-- Add policies as children to the <inbound>, <outbound>, <backend>, and <on-error> elements -->
+<policies>
+    <!-- Throttle, authorize, validate, cache, or transform the requests -->
+    <inbound>
+        <base />
+        <set-variable name="requestBody" value="@(context.Request.Body.As<JObject>( preserveContent:true ))" />
+        <set-variable name="extractedValue" value="@((string)((JObject)context.Variables["requestBody"])["category"])" />
+        <set-backend-service base-url="https://edmsand-cosmosdb-account.documents.azure.com:443/" />
+        <set-method>POST</set-method>
+        <authentication-managed-identity resource="https://edmsand-cosmosdb-account.documents.azure.com" output-token-variable-name="msi-access-token" ignore-error="false" />
+        <set-header name="Authorization" exists-action="override">
+            <value>@("type=aad&ver=1.0&sig=" + context.Variables["msi-access-token"])</value>
+        </set-header>
+        <set-header name="x-ms-date" exists-action="override">
+            <value>@(DateTime.UtcNow.ToString("r"))</value>
+        </set-header>
+        <set-header name="x-ms-version" exists-action="override">
+            <value>2018-12-31</value>
+        </set-header>
+        <set-header name="Content-Type" exists-action="override">
+            <value>application/json</value>
+        </set-header>
+        <set-header name="x-ms-documentdb-partitionkey" exists-action="override">
+            <value>@("[\"" + context.Variables["extractedValue"] + "\"]")</value>
+        </set-header>
+        <rewrite-uri template="/dbs/POC/colls/CountryAndFruit/docs" copy-unmatched-params="false" />
+    </inbound>
+    <!-- Control if and how the requests are forwarded to services  -->
+    <backend>
+        <base />
+    </backend>
+    <!-- Customize the responses -->
+    <outbound>
+        <base />
+    </outbound>
+    <!-- Handle exceptions and customize error responses  -->
+    <on-error>
+        <base />
+    </on-error>
+</policies>
+===============================
+Delete Item By ID:(Delete)
+
+<!--
+    - Policies are applied in the order they appear.
+    - Position <base/> inside a section to inherit policies from the outer scope.
+    - Comments within policies are not preserved.
+-->
+<!-- Add policies as children to the <inbound>, <outbound>, <backend>, and <on-error> elements -->
+<policies>
+    <!-- Throttle, authorize, validate, cache, or transform the requests -->
+    <inbound>
+        <base />
+        <set-variable name="requestBody" value="@(context.Request.Body.As<JObject>( preserveContent:true ))" />
+        <set-variable name="extractedValue" value="@((string)((JObject)context.Variables["requestBody"])["category"])" />
+        <set-variable name="id" value="@(context.Request.MatchedParameters["id"])" />
+        <!-- Check if id is not provided, then throw an error -->
+        <choose>
+            <when condition="@(!context.Variables.ContainsKey("id") || string.IsNullOrEmpty((string)context.Variables["id"]))">
+                <return-response>
+                    <set-status code="400" reason="Bad Request" />
+                    <set-body>
+<value>{"error": "The 'id' parameter is required."}</value></set-body>
+                </return-response>
+            </when>
+            <otherwise>
+                <!-- Continue with normal processing if id is present -->
+                <set-backend-service base-url="https://edmsand-cosmosdb-account.documents.azure.com:443/" />
+                <set-method>DELETE</set-method>
+                <authentication-managed-identity resource="https://edmsand-cosmosdb-account.documents.azure.com" output-token-variable-name="msi-access-token" ignore-error="false" />
+                <set-header name="Authorization" exists-action="override">
+                    <value>@("type=aad&ver=1.0&sig=" + context.Variables["msi-access-token"])</value>
+                </set-header>
+                <set-header name="x-ms-date" exists-action="override">
+                    <value>@(DateTime.UtcNow.ToString("r"))</value>
+                </set-header>
+                <set-header name="x-ms-version" exists-action="override">
+                    <value>2018-12-31</value>
+                </set-header>
+                <set-header name="x-ms-documentdb-partitionkey" exists-action="override">
+                    <value>@("[\"" + context.Variables["extractedValue"] + "\"]")</value>
+                </set-header>
+                <rewrite-uri template="/dbs/POC/colls/CountryAndFruit/docs/{id}" copy-unmatched-params="false" />
+            </otherwise>
+        </choose>
+    </inbound>
+    <!-- Control if and how the requests are forwarded to services  -->
+    <backend>
+        <base />
+    </backend>
+    <!-- Customize the responses -->
+    <outbound>
+        <base />
+    </outbound>
+    <!-- Handle exceptions and customize error responses  -->
+    <on-error>
+        <base />
+    </on-error>
+</policies>
+==========================================
+Get Items by PK Category (Get)
+========================
+<!--
+    - Policies are applied in the order they appear.
+    - Position <base/> inside a section to inherit policies from the outer scope.
+    - Comments within policies are not preserved.
+-->
+<!-- Add policies as children to the <inbound>, <outbound>, <backend>, and <on-error> elements -->
+<policies>
+    <!-- Throttle, authorize, validate, cache, or transform the requests -->
+    <inbound>
+        <base />
+        <set-backend-service base-url="https://edmsand-cosmosdb-account.documents.azure.com:443/" />
+        <authentication-managed-identity resource="https://edmsand-cosmosdb-account.documents.azure.com" output-token-variable-name="msi-access-token" ignore-error="false" />
+        <set-header name="Authorization" exists-action="override">
+            <value>@("type=aad&ver=1.0&sig=" + context.Variables["msi-access-token"])</value>
+        </set-header>
+        <set-header name="x-ms-date" exists-action="override">
+            <value>@(DateTime.UtcNow.ToString("r"))</value>
+        </set-header>
+        <set-header name="x-ms-version" exists-action="override">
+            <value>2018-12-31</value>
+        </set-header>
+        <rewrite-uri template="/dbs/POC/colls/CountryAndFruit/docs" copy-unmatched-params="false" />
+        <set-header name="x-ms-documentdb-partitionkey" exists-action="override">
+            <value>@("[\"" + context.Request.MatchedParameters["category"] + "\"]")</value>
+        </set-header>
+    </inbound>
+    <!-- Control if and how the requests are forwarded to services  -->
+    <backend>
+        <base />
+    </backend>
+    <!-- Customize the responses -->
+    <outbound>
+        <base />
+    </outbound>
+    <!-- Handle exceptions and customize error responses  -->
+    <on-error>
+        <base />
+    </on-error>
+</policies>
+===============================
+Get Item By id: (Get)
+===============
+<!--
+    - Policies are applied in the order they appear.
+    - Position <base/> inside a section to inherit policies from the outer scope.
+    - Comments within policies are not preserved.
+-->
+<!-- Add policies as children to the <inbound>, <outbound>, <backend>, and <on-error> elements -->
+<policies>
+    <!-- Throttle, authorize, validate, cache, or transform the requests -->
+    <inbound>
+        <base />
+        <!-- Extract the id from the URL path and store it in a variable -->
+        <set-variable name="id" value="@(context.Request.MatchedParameters["id"])" />
+        <!-- Check if id is not provided, then throw an error -->
+        <choose>
+            <when condition="@(!context.Variables.ContainsKey("id") || string.IsNullOrEmpty((string)context.Variables["id"]))">
+                <return-response>
+                    <set-status code="400" reason="Bad Request" />
+                    <set-body>
+<value>{"error": "The 'id' parameter is required."}</value></set-body>
+                </return-response>
+            </when>
+            <otherwise>
+                <!-- Continue with normal processing if id is present -->
+                <set-backend-service base-url="https://edmsand-cosmosdb-account.documents.azure.com:443/" />
+                <set-method>POST</set-method>
+                <authentication-managed-identity resource="https://edmsand-cosmosdb-account.documents.azure.com" output-token-variable-name="msi-access-token" ignore-error="false" />
+                <set-header name="Authorization" exists-action="override">
+                    <value>@("type=aad&ver=1.0&sig=" + context.Variables["msi-access-token"])</value>
+                </set-header>
+                <set-header name="x-ms-date" exists-action="override">
+                    <value>@(DateTime.UtcNow.ToString("r"))</value>
+                </set-header>
+                <set-header name="x-ms-version" exists-action="override">
+                    <value>2018-12-31</value>
+                </set-header>
+                <set-header name="x-ms-documentdb-isquery" exists-action="override">
+                    <value>True</value>
+                </set-header>
+                <set-header name="x-ms-documentdb-query-enablecrosspartition" exists-action="override">
+                    <value>True</value>
+                </set-header>
+                <set-header name="Content-Type" exists-action="override">
+                    <value>application/query+json</value>
+                </set-header>
+                <rewrite-uri template="/dbs/POC/colls/CountryAndFruit/docs" copy-unmatched-params="false" />
+                <!-- Construct the JSON body dynamically using the extracted id variable -->
+                <set-body>@("{\"query\":\"SELECT * FROM  c WHERE c.id = @id\",\"parameters\":[{\"name\":\"@id\",\"value\":\"" + context.Variables["id"] + "\"}]}")</set-body>
+            </otherwise>
+        </choose>
+    </inbound>
+    <!-- Control if and how the requests are forwarded to services  -->
+    <backend>
+        <base />
+    </backend>
+    <!-- Customize the responses -->
+    <outbound>
+        <base />
+    </outbound>
+    <!-- Handle exceptions and customize error responses  -->
+    <on-error>
+        <base />
+    </on-error>
+</policies>
+==========================
+UpdateItem By Id (Put)
+=================
+<!--
+    - Policies are applied in the order they appear.
+    - Position <base/> inside a section to inherit policies from the outer scope.
+    - Comments within policies are not preserved.
+-->
+<!-- Add policies as children to the <inbound>, <outbound>, <backend>, and <on-error> elements -->
+<policies>
+    <!-- Throttle, authorize, validate, cache, or transform the requests -->
+    <inbound>
+        <base />
+        <set-variable name="requestBody" value="@(context.Request.Body.As<JObject>( preserveContent:true ))" />
+        <set-variable name="extractedValue" value="@((string)((JObject)context.Variables["requestBody"])["category"])" />
+        <set-variable name="id" value="@(context.Request.MatchedParameters["id"])" />
+        <!-- Check if id is not provided, then throw an error -->
+        <choose>
+            <when condition="@(!context.Variables.ContainsKey("id") || string.IsNullOrEmpty((string)context.Variables["id"]))">
+                <return-response>
+                    <set-status code="400" reason="Bad Request" />
+                    <set-body>
+<value>{"error": "The 'id' parameter is required."}</value></set-body>
+                </return-response>
+            </when>
+            <otherwise>
+                <!-- Continue with normal processing if id is present -->
+                <set-backend-service base-url="https://edmsand-cosmosdb-account.documents.azure.com:443/" />
+                <set-method>PUT</set-method>
+                <authentication-managed-identity resource="https://edmsand-cosmosdb-account.documents.azure.com" output-token-variable-name="msi-access-token" ignore-error="false" />
+                <set-header name="Authorization" exists-action="override">
+                    <value>@("type=aad&ver=1.0&sig=" + context.Variables["msi-access-token"])</value>
+                </set-header>
+                <set-header name="x-ms-date" exists-action="override">
+                    <value>@(DateTime.UtcNow.ToString("r"))</value>
+                </set-header>
+                <set-header name="x-ms-version" exists-action="override">
+                    <value>2018-12-31</value>
+                </set-header>
+                <set-header name="x-ms-documentdb-partitionkey" exists-action="override">
+                    <value>@("[\"" + context.Variables["extractedValue"] + "\"]")</value>
+                </set-header>
+                <rewrite-uri template="/dbs/POC/colls/CountryAndFruit/docs/{id}" copy-unmatched-params="false" />
+            </otherwise>
+        </choose>
+    </inbound>
+    <!-- Control if and how the requests are forwarded to services  -->
+    <backend>
+        <base />
+    </backend>
+    <!-- Customize the responses -->
+    <outbound>
+        <base />
+    </outbound>
+    <!-- Handle exceptions and customize error responses  -->
+    <on-error>
+        <base />
+    </on-error>
+</policies>
+==============================
+Update Item by patch
+====================
+<!--
+    - Policies are applied in the order they appear.
+    - Position <base/> inside a section to inherit policies from the outer scope.
+    - Comments within policies are not preserved.
+-->
+<!-- Add policies as children to the <inbound>, <outbound>, <backend>, and <on-error> elements -->
+<policies>
+    <!-- Throttle, authorize, validate, cache, or transform the requests -->
+    <inbound>
+        <base />
+        <set-variable name="requestBody" value="@(context.Request.Body.As<JObject>( preserveContent:true ))" />
+        <set-variable name="extractedValue" value="@((string)((JObject)context.Variables["requestBody"])["category"])" />
+        <set-variable name="id" value="@(context.Request.MatchedParameters["id"])" />
+        <choose>
+            <when condition="@(!context.Variables.ContainsKey("id") || string.IsNullOrEmpty((string)context.Variables["id"]))">
+                <return-response>
+                    <set-status code="400" reason="Bad Request" />
+                    <set-body>
+<value>{"error": "The 'id' parameter is required."}</value></set-body>
+                </return-response>
+            </when>
+            <otherwise>
+                <set-backend-service base-url="https://edmsand-cosmosdb-account.documents.azure.com:443/" />
+                <set-method>PATCH</set-method>
+                <authentication-managed-identity resource="https://edmsand-cosmosdb-account.documents.azure.com" output-token-variable-name="msi-access-token" ignore-error="false" />
+                <set-header name="Authorization" exists-action="override">
+                    <value>@("type=aad&ver=1.0&sig=" + context.Variables["msi-access-token"])</value>
+                </set-header>
+                <set-header name="x-ms-date" exists-action="override">
+                    <value>@(DateTime.UtcNow.ToString("r"))</value>
+                </set-header>
+                <set-header name="x-ms-version" exists-action="override">
+                    <value>2018-12-31</value>
+                </set-header>
+                <set-header name="Content-Type" exists-action="override">
+                    <value>application/json_patch+json</value>
+                </set-header>
+                <set-header name="x-ms-documentdb-partitionkey" exists-action="override">
+                    <value>@("[\"" + context.Variables["extractedValue"] + "\"]")</value>
+                </set-header>
+                <rewrite-uri template="/dbs/POC/colls/CountryAndFruit/docs/{id}" copy-unmatched-params="false" />
+            </otherwise>
+        </choose>
+    </inbound>
+    <!-- Control if and how the requests are forwarded to services  -->
+    <backend>
+        <base />
+    </backend>
+    <!-- Customize the responses -->
+    <outbound>
+        <base />
+    </outbound>
+    <!-- Handle exceptions and customize error responses  -->
+    <on-error>
+        <base />
+    </on-error>
+</policies>
