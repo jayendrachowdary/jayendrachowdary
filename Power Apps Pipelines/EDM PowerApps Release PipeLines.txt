@@ -1,0 +1,91 @@
+trigger:
+  none
+variables: 
+- template: ../environments/global-variables.yaml 
+resources:
+  pipelines:
+  - pipeline: api
+    source: 'edm-powerapps-build' # name of the pipeline that produces an artifact e.g. My Application Build CI
+    trigger:
+      none
+
+pool:
+  name: '$(buildAgentWindowsPoolName)'
+stages:
+
+- stage: deployToUat
+  displayName: Deploy to UA1
+  variables: 
+  - template: ../environments/ua1-variables.yaml 
+  jobs:
+     - deployment: deployToUat
+       displayName: Deploy to ua1
+       #dependsOn: buildSolution
+       environment: '${{ variables.devopsEnvironment }}'
+       strategy:
+         runOnce:
+           deploy:
+             steps:
+              - template: ../templates/powerapps-release-steps-template.yaml
+                parameters:
+                  PowerPlatformTargetEnvironmentName: '${{ variables.powerPlatformServiceConnection }}'
+                  PowerPlatformSolutionName: '${{ variables.solutionName }}'
+                  PowerPlatformSolutionSettingsFileName: '${{ variables.powerPlatformConfigFile }}'
+
+
+- stage: deployToPerformance
+  displayName: Deploy to Performance
+  variables: 
+  - template: ../environments/pt1-variables.yaml 
+  jobs:
+     - deployment: deploytoperformance
+       displayName: Deploy to Performance
+       #dependsOn: deployToUat
+       environment: '${{ variables.devopsEnvironment }}'
+       strategy:
+         runOnce:
+           deploy:
+             steps:
+              - template: ../templates/powerapps-release-steps-template.yaml
+                parameters:
+                  PowerPlatformTargetEnvironmentName: '${{ variables.powerPlatformServiceConnection }}'
+                  PowerPlatformSolutionName: '${{ variables.solutionName }}'
+                  PowerPlatformSolutionSettingsFileName: '${{ variables.powerPlatformConfigFile }}'
+
+- stage: deployToPreProd
+  displayName: Deploy To Preprod
+  variables: 
+  - template: ../environments/pp1-variables.yaml 
+  jobs:
+     - deployment: deploytopreprod
+       displayName: Deploy To Preprod
+       #dependsOn: deployToPerformance
+       environment: '${{ variables.devopsEnvironment }}'
+       strategy:
+         runOnce:
+           deploy:
+             steps:
+              - template: ../templates/powerapps-release-steps-template.yaml
+                parameters:
+                  PowerPlatformTargetEnvironmentName: '${{ variables.powerPlatformServiceConnection }}'
+                  PowerPlatformSolutionName: '${{ variables.solutionName }}'
+                  PowerPlatformSolutionSettingsFileName: '${{ variables.powerPlatformConfigFile }}'
+
+- stage: deployToProd
+  displayName: Deploy To Prod
+  variables: 
+  - template: ../environments/pr-variables.yaml
+  jobs:
+     - deployment: deploytoprod
+       displayName: Deploy To Prod
+       #dependsOn: deployToPreProd
+       environment: '${{ variables.devopsEnvironment }}'
+       strategy:
+         runOnce:
+           deploy:
+             steps:
+              - template: ../templates/powerapps-release-steps-template.yaml
+                parameters:
+                  PowerPlatformTargetEnvironmentName: '${{ variables.powerPlatformServiceConnection }}'
+                  PowerPlatformSolutionName: '${{ variables.solutionName }}'
+                  PowerPlatformSolutionSettingsFileName: '${{ variables.powerplatformconfigfile }}'

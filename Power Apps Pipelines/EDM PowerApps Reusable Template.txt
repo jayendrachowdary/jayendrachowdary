@@ -1,0 +1,36 @@
+parameters:
+- name: 'PowerPlatformSolutionName'
+  default: 'EDMSSolution_managed.zip' # e.g. MyPowerPlatformSolution.zip
+  type: string 
+- name: 'PowerPlatformTargetEnvironmentName'
+  default: 'Power Platform Test Environment'
+  type: string
+- name: 'PowerPlatformSolutionSettingsFileName'
+  default: '' 
+  type: string
+
+steps:              
+  - task: PowerPlatformToolInstaller@2
+    displayName: 'Power Platform Tool Installer '
+    
+  - task: PowerShell@2
+    displayName: 'List files in directory'
+    enabled: true
+    inputs:
+      targetType: 'inline'
+      workingDirectory: '$(Pipeline.Workspace)'
+      script: 'Get-ChildItem -Recurse'
+      #microsoft-IsvExpTools.PowerPlatform-BuildTools.import-solution.PowerPlatformImportSolution@2
+
+  - task: PowerPlatformImportSolution@2
+    displayName: 'Power Platform Import Solution '
+    inputs:
+       authenticationType: PowerPlatformSPN
+       PowerPlatformSPN: '${{ parameters.PowerPlatformTargetEnvironmentName }}'
+       #SolutionInputFile: '$(System.DefaultWorkingDirectory)/edm-powerapps-Build/${{ variables.solutionName }}/${{ variables.solutionName }}_managed.zip'    
+       SolutionInputFile: '$(Pipeline.Workspace)/api/${{ parameters.PowerPlatformSolutionName }}/${{ parameters.PowerPlatformSolutionName }}_managed.zip'
+       UseDeploymentSettingsFile: true
+       DeploymentSettingsFile: '$(Pipeline.Workspace)/api/${{ parameters.PowerPlatformSolutionName }}/config/${{ parameters.PowerPlatformSolutionSettingsFileName }}'
+       AsyncOperation: true
+       MaxAsyncWaitTime: 60
+       ConvertToManaged: true

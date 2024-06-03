@@ -1,0 +1,116 @@
+# trigger:
+# - main
+# - releases/*
+
+
+
+trigger: none
+variables: 
+- template: ../environments/global-variables.yaml 
+
+resources:
+  pipelines:
+  - pipeline: api
+    source: 'edm-powerapps-build' # name of the pipeline that produces an artifact e.g. My Application Build CI
+    trigger:
+      none
+
+pool:
+  name: $(buildAgentWindowsPoolName)
+stages:
+- stage: buildSolution
+  displayName: Build Solution
+  variables: 
+  - template: ../environments/dv1-variables.yaml 
+  jobs:
+  - job: buildSolution
+    displayName: Build Solution - ${{ variables.solutionName }} 
+
+    steps:
+      - task: PowerPlatformToolInstaller@2
+        inputs:
+          DefaultVersion: true
+
+      - task: PowerPlatformWhoAmi@2
+        inputs:
+          authenticationType: 'PowerPlatformSPN'
+          PowerPlatformSPN: '${{ variables.powerPlatformServiceConnection }}'
+
+      - task: PowerPlatformSetSolutionVersion@2
+        inputs:
+          authenticationType: 'PowerPlatformSPN'
+          PowerPlatformSPN: '${{ variables.powerPlatformServiceConnection }}'
+          SolutionName: '${{ variables.solutionName }}'
+          SolutionVersionNumber: '${{ variables.versionNumber }}'
+
+      - task: PowerPlatformExportSolution@2
+        displayName: Export Solution
+        inputs:
+            authenticationType: 'PowerPlatformSPN'
+            PowerPlatformSPN: '${{ variables.powerPlatformServiceConnection }}'
+            SolutionName: '${{ variables.solutionName }}'
+            SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\${{ variables.solutionName }}.zip'
+            AsyncOperation: true
+            MaxAsyncWaitTime: '60'
+
+      - task: PowerPlatformUnpackSolution@2
+        displayName: Unpack Solution
+        inputs:
+          SolutionInputFile: '$(Build.ArtifactStagingDirectory)\${{ variables.solutionName }}.zip'
+          SolutionTargetFolder: '$(Build.SourceDirectory)\${{ variables.solutionName }}\Unmanaged'
+
+      - task: PowerPlatformExportSolution@2
+        displayName: Export Managed Solution
+        inputs:
+          authenticationType: 'PowerPlatformSPN'
+          PowerPlatformSPN: '${{ variables.powerPlatformServiceConnection }}'
+          SolutionName: '${{ variables.solutionName }}'
+          SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\${{ variables.solutionName }}_managed.zip'
+          Managed: true
+          AsyncOperation: true
+          MaxAsyncWaitTime: '60'
+      
+      - task: PowerPlatformChecker@2
+        displayName: Run Static Code Analysis
+        inputs:
+          authenticationType: 'PowerPlatformSPN'
+          PowerPlatformSPN: '${{ variables.powerPlatformServiceConnection }}'
+          FilesToAnalyze: '$(Build.ArtifactStagingDirectory)\${{ variables.solutionName }}.zip'
+          RuleSet: '0ad12346-e108-40b8-a956-9a8f95ea18c9'
+          SaveResults: true
+          ErrorLevel: 'CriticalIssueCount'
+          ErrorThreshold: '1'
+          # FailOnPowerAppsCheckerAnalysisError: true
+      
+      - task: PowerPlatformUnpackSolution@2
+        inputs:
+          SolutionInputFile: '$(Build.ArtifactStagingDirectory)\${{ variables.solutionName }}_managed.zip'
+          SolutionTargetFolder: '$(Build.SourceDirectory)\${{ variables.solutionName }}\Managed'
+          SolutionType: 'Managed'  
+      
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: 'config'
+          Contents: '**'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)\config'
+          
+      - task: CmdLine@2
+        inputs:
+          script: |
+            echo Write your commands here
+            
+            git config user.email "${{ variables.userEmail }}"
+            git config user.name "${{ variables.userName }}"
+            #git checkout "$(sourceBranch)"
+            git checkout "$(Build.SourceBranchName)"
+            git checkout -b ${{ variables.solutionBranchName }}
+            #git checkout main
+            git add --all
+            git commit -m "${{ variables.commitMessage }}"
+            git -c http.extraheader="AUTHORIZATION:bearer $(System.AccessToken)" push --set-upstream origin ${{ variables.solutionBranchName }} -f
+
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)'
+          artifact: '${{ variables.solutionName }}'
+          publishLocation: 'pipeline'
