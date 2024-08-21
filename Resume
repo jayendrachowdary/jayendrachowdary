@@ -1,0 +1,169 @@
+SENIOR SHAREPOINT DEVELOPER
+Jayendra
+Mobile no: 91-9985099491				 Email: Sharepointjayendra@gmail.com
+
+
+Professional Summary
+•	Having 9+ years of experience in SharePoint specific to development and deployment.
+•	Extensively experience on Canvas apps, Model Driven apps and Power automate and Microsoft Copilot studio.
+•	Implemented the CI/CD pipelines using yaml code and like reusable template.
+•	Implemented the Power pages portal and using the Dataverse.
+•	Using API Management to get the data from COSMOSDB.
+•	Extensively experience on SPFX webparts.
+•	Integrated the modern webparts in Teams tab.
+•	Expertise in React, java script, jQuery, jsom, CSOM, RESTAPI, jQuery, HTML and Boots tarp and PowerShell script.
+•	Experience on Azure devops and Git.
+•	Deployed the Dotnet application Azure app services in Production environment.
+•	Worked on SharePoint 2016 Environment to convert Lotus Notes Application to SharePoint 2016.
+•	Deploying the WSP in production Environment.
+•	Created automation report using Excel Spread sheets in Power BI tool.
+•	Backup and restore SP files using Power shell in SP 2016
+•	Expertise in developing and deploying Custom Web parts, Timer- jobs and Batch jobs
+•	Worked on Deploying SharePoint wsp using Power Shell.
+•	Experienced in administration such as installing, configuring, and developing SPS2013 with and Microsoft SPS 2010 with WSS 3.0and troubleshooting.
+
+Work Experience
+
+Senior SharePoint Developer (EY)		 		      Sep/6/2021 – Present.
+
+Application Name: PLM Canel Insurance
+Application Summary:
+	The solution is implemented as a Model Driven App and Portal leveraging the capabilities of the Microsoft Power Apps platform. The user interface has been designed in compliance with EY theme and the data model architecture is in conformance to the industry standard ACORD format to support all the business processes.
+Tools: Model Driven apps, Power automate, Custom API, Dataverse and Power pages.
+Responsibilities: 
+•	Handling the tickets based on Priority and giving the eta for business requirements.
+•	Design the technical document of the application flow.
+•	Design the schema architecture of the application using Dataverse.
+•	Played the senior role in application development.
+•	Implemented the automate deployment using CI/CD pipelines
+Senior SharePoint Developer (EY)		 		      Feb/14/2021 – Jun/14/2024.
+
+Application Name: Admiral Account.
+Application Summary:
+	On this application was implemented in power apps and Azure COSMOSDB and API Management, CI/CD Pipelines. This application is used to show the user related records. And it Consists of approval levels.
+Tools: Canvas apps, Azure API management, AI Search, Azure COSMOSDB, CI/CD Pipelines.
+Responsibilities: 
+•	Created the Power apps screens with responsive design.
+•	Using custom Connector to get the data from Azure cosmos DB.
+•	Implemented the REST API queries to get the data from the cosmos DB using api management.
+•	Implemented the automate deployment using CI/CD pipelines.
+•	Design the Document of the application architecture.
+
+
+Senior SharePoint Developer (NCS) 			         1/Jan/2019 - 28/Aug /2021
+
+Application Name: MOHOCP
+Application Summary:
+OCP Application is a Intranet Application it contains number of apps which will used for various Business scenarios’ Application Contains 3 Modules User module and CP Module and Admin Module. Admin Module is the key Module for OCP Application he Can handle the entire application for Giving access Rights to user and CP Users and Admin can be Able to see all the Modules What the user is Created and CP User Created. CP user Can access only the Content Provider section Links and he Cannot access the Admin Access links user Can handle the user related Items. Admin Can Give the access to user for accessing the app for the user can create Documents and Record and Same as the CP User. For User related actions saving the record in sql and store the Document in SharePoint Document Library.
+
+Tools: Net, SharePoint 2016, Sql Server 2012.
+Responsibilities:
+•	Implemented the New Apps for Business Related Requirements.
+•	Implemented the Batch job for giving access wrights to user for Document related Sites in SharePoint.
+•	Implemented the Custom Mater Page in SharePoint with Branding.
+•	Implemented the Power Shell Script for Moving Files from Local drive to SharePoint Document Library.
+•	Created a Custom Upload Control web part in SP.
+•	Created a Custom Pagination Control web part in SP.
+•	Implemented the Report.
+Implemented the Functionality for Storing the Documents in SharePoint library.
+
+JoulestoWatts Business Solutions Pvt Ltd                                25/May/2018 - 28/Dec/2018
+
+Client: NCS
+Application Name: MOHOCP
+Application Summary:
+OCP Application is a Intranet Application it contains number of apps which will used for various Business scenarios’ Application Contains 3 Modules User module and CP Module and Admin Module.Admin Module is the key Module for OCP Application he Can handle the entire application for Giving access Rights to user and CP Users and Admin can Able to see all the Modules What the user is Created and CP User Created.CP user Can access only the Content Provider section Links and he Cannot access the Admin Access links.CP user Can handle the user related Items.Admin Can Give the access to user for accessing the app for the user can create Documents and Record and Same as the CP User. For User related actions saving the record in sql and store the Document in SharePoint Document Library.
+
+Tools: Net, SharePoint 2016, SQL Server 2012.
+Responsibilities:
+•	Implemented the New Apps for Business Related Requirements.
+•	Implemented the Batch job for giving access wrights to user for Document related Sites in SharePoint.
+•	Implemented the Custom Mater Page in SharePoint with Branding.
+•	Implemented the Power Shell Script for Moving Files from Local drive to SharePoint Document Library.
+•	Created a Custom Upload Control web part in SP.
+•	Created a Custom Pagination Control web part in SP.
+•	Implemented the Report.
+Implemented the Functionality for Storing the Documents in SharePoint library.
+
+
+R Systems International ltd     				5/April/2017 – 01/March /2018
+
+Client: Nokia
+Tool: Power BI
+Application Summary:
+To integrate the Zira tickets in Power Bi and make a report according to client requirement. Showing data in visualization Dashboards in O365 environment. To integrate a zira tool I used a rest queries to fetch the tickets and like a data table. Based on client requirement while creating a dashboard in Power Bi I used a slicer control.
+Environment: Power BI, O365
+Responsibilities:
+•	Apply the raw data in different dashboards.
+•	Automatically refreshing the data.
+•	Used slicer control in a dropdown list.
+•	Applying Some DAX function in a Report.
+•	Showing the live report data in SharePoint online environment.
+
+Client: Panasonic
+Tool: SharePoint 2016
+Application Summary:
+Panasonic Portal Has Several Portals We Implemented the Project Budget Tracking Systems and calculate the overall budget for Each Country. In Panasonic Project two Module are their 1 is user module and 2 is admin Module. If user is created Record for 1st time and the admin review the form and approval the Document Like this there are 1 approval users are there to track the Status of Document records.
+
+Environment: Sp2013, Sp designer work flow.
+Responsibilities:
+•	Analyze the new Functionality and Develop the Requirements as per Business Requirements.
+•	Implemented the Timer Job for sending the Report to End users.
+•	Used OOTB web parts in SharePoint Page level.
+•	Implemented the work flow to track the status of Document Approval.
+
+
+Unified IT Service Pvt.Ltd.  			                    19-Sep-2016 -28-Feb -2017
+
+Client: Pepco.
+Tool: SP 2013.
+Application Summary:
+Pepco portal is a component of register the details of Vehicle details and product details of the products. It contains several modules vehicle Modification form, vehicle Rental requests, Vehicle Addition or upgrade and Vehicle Take Home Request. By using work flow to track custom form.
+Environment: SharePoint 2013, Designer 2013.
+Developer Responsibility Includes
+•	Developed on Custom forms using JavaScript.
+•	Migrated from Lotus Notes Application forms to SharePoint pages.
+•	Implemented a Approval list workflow in SharePoint designer in SP2013.
+•	Implemented Custom People Picker Controller.
+
+
+Web Synergies    						11/Sep/2015 – 05/Aug/2016
+
+Client: OMAN.
+Tool: SP 2013.
+Application Summary: 
+eService Portal component of the (NIMR) National Integrated Manpower Register System of public Authority of Manpower Register, using this system our client will identify their respective people occupancy of the JOBs. And using this system people can register their profile and will Search the respective jobs. For approaching the above process eService portal does have the different concepts Such as Announcement, Events, Jobseekers and job providers, News and Read Speaker etc.,
+Environment: SharePoint 2013, Designer 2013.
+Developer Responsibility Includes
+•	Developed on Custom Web parts and Master page with bootstrap.
+•	Worked anonymous Search for anonymous users.
+•	Implemented on FBA Authentication.
+•	Developed on Designer Work flows like List workflow.
+•	Customized on Social media pages.
+•	Setting Permissions to groups in site.
+•	Customized on Newsletter Template using Timer job.
+•	Customized on Page layouts.
+•	Involved in the design and development phases to gather requirements from various sources. Co-ordination with team members to discuss the scope of the project. Prepared CSS classes which helped the look and feel.
+
+Working Skills
+	.	
+•	SharePoint online
+•	Sp2016,2013.
+•	SharePoint designer 2013
+•	Visual studio Code,
+•	Visual studio 2015
+•	Power Shell	•	Power apps, Power Automates
+•	SPFX React Framework.
+•	Pnp js Libraries, REST API, Asp.net
+•	C#, Sql Server
+•	HTML, Bootstrap, UI-Fabric
+•	React js, JavaScript, jQuery
+•	API Management, Azure Cosmos DB
+•	CI/CD Pipelines, Azure Devops.
+.
+
+Education
+
+•	Bachelor’s in information technology in 2013 in Nagarjuna university.
+
+
